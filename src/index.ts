@@ -18,26 +18,29 @@ const config = new Configuration({
 
 const openai = new OpenAIApi(config);
 
-app.listen("3080", ()=> console.log("Listening on port 3080"));
-
-app.get('/', async (req, res) => {
-    res.send("Hello WorldAAH");
-});
+// app.get('/', async (req, res) => {
+//     res.send("Hello WorldAAH");
+// });
 
 app.post('/', async (req, res) => {
-    const {message} = req.body
+    const {prompt} = req.body
 
     try {
         const response = await openai.createCompletion({
             model: "text-davinci-003",
-            prompt: `${message}`,
-            max_tokens: 100,
-            temperature: .5
+            prompt: `${prompt}`,
+            max_tokens: 512,
+            temperature: 0
         })
-        res.json({message: response.data.choices[0].text})
+        res.send(response.data.choices[0].text)
+        // res.json({message: response.data.choices[0].text})
 
     } catch (error) {
         console.log(error)
         res.send(error).status(400)
     }
-})
+});
+
+const PORT = 8020;
+
+app.listen(PORT, ()=> console.log(`Server running on port ${PORT}`));
