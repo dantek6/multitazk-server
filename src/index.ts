@@ -5,7 +5,7 @@ import env from "dotenv";
 import { Configuration, OpenAIApi } from "openai";
 
 import indexRoutes from "./routes/index.routes";
-import './database';
+const { run } = require('./database');
 
 const app = express();
 
@@ -34,6 +34,12 @@ app.post("/chat", async (req, res) => {
   // res.json({message: response.data.choices[0].text})
 });
 
-const PORT = 8080;
+//connectDB();
+const PORT = 8000;
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+//run();
+run().catch((err: Error) => {
+  console.error('An error occurred:', err);
+});
