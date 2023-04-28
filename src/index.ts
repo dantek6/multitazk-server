@@ -20,7 +20,6 @@ app.post("/chat", async (req, res) => {
   const { prompt } = req.body;
 
   const config = new Configuration({
-    //organization: "org-iZTG3fUXueYaxrLsiOaBuhJf",
     apiKey: process.env.OPENAI_API_KEY,
   });
   const openai = new OpenAIApi(config);
@@ -35,11 +34,10 @@ app.post("/chat", async (req, res) => {
 });
 
 //connectDB();
-const PORT = 8000;
+const PORT = 8080;
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
-//run();
 run().catch((err: Error) => {
   console.error('An error occurred:', err);
 });
