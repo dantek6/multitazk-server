@@ -5,14 +5,13 @@
   "main": "dist/index.js",
   "type": "commonjs",
   "scripts": {
-    "dev": "tsc && nodemon --exec babel-node --extensions \".ts\" src/index.ts"
+    "dev": "tsc && nodemon src/index.ts --exec ts-node-dev --respawn"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@types/express": "^4.17.17",
     "@types/node": "^18.15.5",
-    "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
@@ -23,11 +22,6 @@
     "openai": "^3.2.1"
   },
   "devDependencies": {
-    "@babel/cli": "^7.21.0",
-    "@babel/core": "^7.21.4",
-    "@babel/node": "^7.20.7",
-    "@babel/preset-env": "^7.21.4",
-    "@babel/preset-typescript": "^7.21.4",
     "@types/jasmine": "^4.3.1",
     "jasmine-core": "^4.6.0",
     "karma": "^6.4.1",
@@ -36,6 +30,7 @@
     "karma-webpack": "^5.0.0",
     "ts-loader": "^9.4.2",
     "ts-node": "^10.9.1",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^5.0.2",
     "webpack": "^5.76.3",
     "webpack-dev-server": "^4.13.1"
