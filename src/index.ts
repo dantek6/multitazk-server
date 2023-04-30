@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import env from "dotenv";
 import { Configuration, OpenAIApi } from "openai";
-
+import TaskWriteModel from "./models/TaskWrite";
 import indexRoutes from "./routes/index.routes";
 const { run } = require('./database');
 
@@ -39,11 +39,27 @@ app.get("/users", (req, res) => {
     res.send("Lista de usuarios:")
 });
 
-run().catch((err: Error) => {
-  console.error('An error occurred:', err);
-});
-
 const PORT = process.env.PORT;
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
+//Rellenar datos del modelo:
+const taskWrite = new TaskWriteModel({
+  // id: "1",
+  title: "Tarea 1",
+  description: "Descripción de la tarea 1",
+  date: new Date(),
+  timeMin: 10,
+  groupId: "1",
+  lengthMin: 10,
+  points: 10,
+  createdAt: new Date(),
+  updatedAt: new Date(),
+});
+
+console.log(taskWrite);
+
+//Capturar error de Base de Datos si hay
+run().catch((err: Error) => {
+  console.error('An error occurred:', err);
+});
