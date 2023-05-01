@@ -1,27 +1,36 @@
-import { Schema, model } from 'mongoose';
+import { prop, getModelForClass } from '@typegoose/typegoose';
 
-const taskWriteSchema = new Schema({
-    id: {
-        type: String,
-        required: true,
-        unique: true,
-        trim: true,
-    },
-    title: {
-        type: String,
-        required: true,
-    },
-    description: {
-        type: String,
-        required: true,
-    },
-    date: Date,
-    timeMin: Number,
-    groupId: String,
-    lengthMin: Number,
-    points: Number,
-},{
-    timestamps: true
-})
+class TaskWrite {
+    // @prop({ required: true, unique: true, trim: true })
+    // id: string
 
-export default model('TaskWrite', taskWriteSchema)
+    @prop({ required: true })
+    title: string
+
+    @prop()
+    description: string
+
+    @prop()
+    date: Date
+
+    @prop()
+    timeMin: number
+
+    @prop({ required: true })
+    groupId: string
+
+    @prop()
+    lengthMin: number
+
+    @prop()
+    points: number
+
+    @prop({ required: true })
+    createdAt: Date
+
+    @prop({ required: true })
+    updatedAt: Date
+}
+
+const TaskWriteModel = getModelForClass(TaskWrite);
+export default TaskWriteModel;
