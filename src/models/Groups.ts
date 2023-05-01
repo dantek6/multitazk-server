@@ -1,4 +1,4 @@
-import { prop } from "@typegoose/typegoose";
+import { prop, getModelForClass } from "@typegoose/typegoose";
 
 class GROUP{
     @prop({ required: true, unique: true, trim: true })
@@ -11,17 +11,20 @@ class GROUP{
     createdAt: Date
 
     @prop({ required: true })
-    updatedAt: Date
-
-    @prop({ required: true })
     membersId: string[]
 
     @prop({ required: true })
-    tasksCompleted: string[]
+    pastTasks: string[]
 
     @prop({ required: true })
     tasks: string[]
 
     @prop({ required: true })
     idAdmin: string
+
+    @prop({ required: true })
+    achievements: string[]
 }
+
+const GroupModel = getModelForClass(GROUP);
+export default GroupModel;
