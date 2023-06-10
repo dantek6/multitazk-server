@@ -6,18 +6,18 @@ import { Configuration, OpenAIApi } from "openai";
 import TaskWriteModel from "./models/TaskWrite";
 import UserModel from "./models/Users";
 
-import indexRoutes from "./routes/index.routes";
+import authRoutes from "./routes/auth.routes";
 const { run } = require("./database");
 
 const app = express();
-
-app.use(indexRoutes);
 
 env.config();
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
+
+app.use('/api', authRoutes);
 
 //Conectar a la API de OPENAI
 app.post("/chat", async (req, res) => {
@@ -66,7 +66,7 @@ async function executeQueries() {
 
   const user = new UserModel({
     id: "1",
-    name: "Usuario 1",
+    username: "Usuario 1",
     email: "jondoe@gmail.com",
     password: "123456",
     createdAt: new Date(),
@@ -90,7 +90,6 @@ async function executeQueries() {
   // await taskWrite.save();
   //await user.save();
   // console.log(taskWrite);
-  console.log(user);
 }
 
 executeQueries();

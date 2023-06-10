@@ -5,7 +5,7 @@ class USER {
   id: string;
 
   @prop({ required: true })
-  name: string;
+  username: string;
 
   @prop({ required: true })
   email: string;
