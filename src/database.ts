@@ -1,29 +1,28 @@
 import env from "dotenv";
-const { MongoClient, ServerApiVersion } = require('mongodb');
+import mongoose from "mongoose";
 
 env.config();
-
 const uri = process.env.MONGODB_CONFIG;
 
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  }
-});
-async function run() {
+async function connectDB() {
   try {
-    // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
-    // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
+    // Connect with Mongoose
+    if (uri) {
+      await mongoose.connect(uri);
+    } else {
+      console.error("MongoDB URI is undefined");
+      process.exit(1);
+    }
+
+    // Handle Mongoose connection errors
+    mongoose.connection.on("error", (error) => {
+      console.error("MongoDB connection error:", error);
+    });
+
     console.log("DB Connected");
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
+  } catch(err) {
+    console.error("An error occurred:", err);
   }
 }
 
-module.exports = { run };
+module.exports = { connectDB };

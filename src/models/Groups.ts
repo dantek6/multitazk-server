@@ -1,26 +1,21 @@
 import { prop, getModelForClass } from "@typegoose/typegoose";
+import { TimeStamps } from "@typegoose/typegoose/lib/defaultClasses";
 
-class GROUP{
-    @prop({ required: true, unique: true, trim: true })
-    id: string
+class GROUP extends TimeStamps{
+    // @prop({ required: true, unique: true, trim: true })
+    // id: string
 
     @prop({ required: true })
     name: string
 
     @prop({ required: true })
-    createdAt: Date
+    usersId: string[]
 
     @prop({ required: true })
-    membersId: string[]
+    tasksId: string[]
 
     @prop({ required: true })
-    pastTasks: string[]
-
-    @prop({ required: true })
-    tasks: string[]
-
-    @prop({ required: true })
-    idAdmin: string
+    AdminId: string
 
     @prop({ required: true })
     achievements: string[]

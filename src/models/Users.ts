@@ -1,23 +1,16 @@
 import { prop, Passthrough, getModelForClass } from "@typegoose/typegoose";
+import { TimeStamps } from "@typegoose/typegoose/lib/defaultClasses";
 
-class USER {
-  @prop({ required: true, unique: true, trim: true })
-  id: string;
+class USER extends TimeStamps{
 
   @prop({ required: true })
   username: string;
 
-  @prop({ required: true })
+  @prop({ required: true, unique: true, trim: true })
   email: string;
 
   @prop({ required: true })
   password: string;
-
-  @prop({ required: true })
-  createdAt: Date;
-
-  @prop({ required: true })
-  updatedAt: Date;
 
   @prop({
     required: true,
@@ -43,9 +36,10 @@ class USER {
     }
   ];
 
-  @prop()
+  @prop({ type: [String], required: true })
   taskId: string[];
 }
 
 const UserModel = getModelForClass(USER);
+
 export default UserModel;

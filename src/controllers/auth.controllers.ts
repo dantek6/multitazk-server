@@ -1,22 +1,96 @@
-import { Request, Response } from 'express';
-import UserModel from '../models/Users';
+import { Request, Response } from "express";
+import UserModel from "../models/Users";
+import { createAccessToken } from "../libs/jwt";
+import bcrypt from "bcryptjs";
+import moment from "moment-timezone";
 
+//Registro de Usuario:
 export const register = async (req: Request, res: Response) => {
-    const { username, email, password } = req.body;
-    
-    try{
-        const newUser = new UserModel({
-            username,
-            email,
-            password
-        });
-        await newUser.save();
-        res.send('register');
-    }catch(err){
-        console.log(err);
-    }
+  const { username, email, password } = req.body;
+  try {
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    const newUser = new UserModel({
+      username,
+      email,
+      password: passwordHash,
+      groups: [],
+      taskId: [],
+    });
+    const userSaved = await newUser.save();
+    const token = await createAccessToken({ id: userSaved._id });
+
+    res.cookie("token", token);
+
+    res.status(201).json({
+      id: userSaved._id,
+      username: userSaved.username,
+      email: userSaved.email,
+      groups: userSaved.groups,
+      taskId: userSaved.taskId,
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Error al registrar el usuario" });
+  }
 };
 
-export const login = (req: Request, res: Response) => {
-    res.send('login');
-}
+//Login de Usuario:
+export const login = async (req: Request, res: Response) => {
+  const { username, email, password } = req.body;
+  try {
+    const userFound = await UserModel.findOne({
+      $or: [{ email: email }, { username: username }],
+    });
+
+    if (!userFound)
+      return res.status(400).json({ error: "Usuario no encontrado" });
+
+    const isMatch = await bcrypt.compare(password, userFound.password);
+
+    if (!isMatch)
+      return res.status(400).json({ error: "Contraseña incorrecta" });
+
+    const token = await createAccessToken({ id: userFound._id });
+
+    res.cookie("token", token);
+
+    res.status(201).json({
+      id: userFound._id,
+      username: userFound.username,
+      email: userFound.email,
+      groups: userFound.groups,
+      taskId: userFound.taskId,
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Error al registrar el usuario" });
+  }
+};
+
+//Cierre de sesión:
+export const logout = (req: Request, res: Response) => {
+  res.cookie("token", "", {
+    expires: new Date(0),
+  });
+  return res.sendStatus(200);
+};
+
+
+//Ver Perfil de Usuario:
+export const profile = async (req: Request, res: Response) => {
+  const userFound = await UserModel.findById((req as any).user.id);
+  
+  if (!userFound){
+    return res.status(404).json({ error: "Usuario no encontrado" });
+  }
+  
+  const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  return res.json({
+    id: userFound._id,
+    username: userFound.username,
+    email: userFound.email,
+    createdAt: moment(userFound.createdAt).tz(userTimezone).format(),
+    updatedAt: moment(userFound.updatedAt).tz(userTimezone).format(),
+  });
+
+};

@@ -1,6 +1,7 @@
 import { prop, getModelForClass } from '@typegoose/typegoose';
+import { TimeStamps } from "@typegoose/typegoose/lib/defaultClasses";
 
-class TaskSelection {
+class TaskSelection extends TimeStamps {
     // @prop({ required: true, unique: true, trim: true })
     // id: string
 
@@ -8,13 +9,13 @@ class TaskSelection {
     title: string
 
     @prop()
-    description: string
+    instruction: string
 
     @prop()
     date: Date
 
-    @prop()
-    timeMin: number
+    // @prop()
+    // timeMin: number
 
     @prop({ required: true })
     groupId: string
@@ -24,12 +25,6 @@ class TaskSelection {
 
     @prop()
     points: number
-
-    @prop({ required: true })
-    createdAt: Date
-
-    @prop({ required: true })
-    updatedAt: Date
 
 }
 

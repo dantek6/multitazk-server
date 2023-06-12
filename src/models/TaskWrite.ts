@@ -1,20 +1,19 @@
-import { prop, getModelForClass } from '@typegoose/typegoose';
+import { prop, Passthrough, getModelForClass } from '@typegoose/typegoose';
+import { TimeStamps } from "@typegoose/typegoose/lib/defaultClasses";
 
-class TaskWrite {
-    // @prop({ required: true, unique: true, trim: true })
-    // id: string
+class TaskWrite extends TimeStamps{
 
     @prop({ required: true })
     title: string
 
-    @prop()
-    description: string
+    @prop({ required: true })
+    instruction: string
 
-    @prop()
+    @prop({ required: true })
     date: Date
 
-    @prop()
-    timeMin: number
+    // @prop()
+    // timeMin: number
 
     @prop({ required: true })
     groupId: string
@@ -25,11 +24,26 @@ class TaskWrite {
     @prop()
     points: number
 
-    @prop({ required: true })
-    createdAt: Date
+    @prop({
+        required: true,
+        type: () =>
+          new Passthrough(
+            [
+              {
+                  userId: String,
+                  taskResponse: String,
+              },
+            ],
+            true
+          ),
+      })
+      responses: [
+        {
+            userId: string;
+            taskResponse: string;
+        }
+      ];
 
-    @prop({ required: true })
-    updatedAt: Date
 }
 
 const TaskWriteModel = getModelForClass(TaskWrite);
