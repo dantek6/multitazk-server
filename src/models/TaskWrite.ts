@@ -1,5 +1,8 @@
 import { prop, Passthrough, getModelForClass } from '@typegoose/typegoose';
+import { Types } from 'mongoose';
 import { TimeStamps } from "@typegoose/typegoose/lib/defaultClasses";
+
+const objectId = Types.ObjectId;
 
 class TaskWrite extends TimeStamps{
 
@@ -15,8 +18,11 @@ class TaskWrite extends TimeStamps{
     // @prop()
     // timeMin: number
 
-    @prop({ required: true })
-    groupId: string
+    @prop({ type: objectId, ref: 'GroupModel',required: true })
+    groupId: Types.ObjectId;
+    
+    @prop({ type: objectId, ref: 'UserModel',required: true })
+    adminId: Types.ObjectId
 
     @prop()
     lengthMin: number

@@ -2,9 +2,11 @@ import express from "express";
 import cors from "cors";
 import env from "dotenv";
 import cookieParser from "cookie-parser";
+
 import authRoutes from "./routes/auth.routes";
 import chatRoutes from "./routes/chat.routes";
 import tasksRoutes from "./routes/tasks.routes";
+import groupsRoutes from "./routes/groups.routes";
 const { connectDB } = require("./database");
 
 connectDB();
@@ -18,8 +20,13 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
 
+//Crear Rutas Usuarios:
 app.use('/api', authRoutes);
 
+//Crear Rutas Grupos:
+app.use('/api', groupsRoutes);
+
+//Crear Rutas Tareas:
 app.use('/api', tasksRoutes);
 
 //Conectar a la API de OPENAI

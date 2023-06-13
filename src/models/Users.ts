@@ -43,3 +43,4 @@ class USER extends TimeStamps{
 const UserModel = getModelForClass(USER);
 
 export default UserModel;
+export {USER};
