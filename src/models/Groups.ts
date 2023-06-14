@@ -26,3 +26,4 @@ class GROUP extends TimeStamps{
 
 const GroupModel = getModelForClass(GROUP);
 export default GroupModel;
+export { GROUP}

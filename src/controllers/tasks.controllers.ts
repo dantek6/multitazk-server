@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import TaskWriteModel from "../models/TaskWrite";
+import GroupModel from "../models/Groups";
 
 //Obtener todas las tareas:
 export const getTasks = async (req: Request, res: Response) => {
@@ -12,8 +13,17 @@ export const getTasks = async (req: Request, res: Response) => {
 //Crear una tarea:
 export const createTasks = async (req: Request, res: Response) => {
   const { title, instruction, date, lengthMin, points } = req.body;
+  const { groupId } = req.params;
+  
+  // Verificar si el usuario es el administrador del grupo
+  const user = (req as any).user;
+  const isAdmin = await GroupModel.exists({ _id: groupId, adminId: user.id });
+  
+  console.log(user.id, groupId)
 
-  console.log((req as any).user);
+  if (!isAdmin) {
+    return res.status(403).json({ error: "No eres el administrador de este grupo" });
+  }
 
   const newTask = new TaskWriteModel({
     title,
@@ -21,7 +31,7 @@ export const createTasks = async (req: Request, res: Response) => {
     date,
     lengthMin,
     points,
-    groupId: (req as any).user.id,
+    groupId,
     adminId: (req as any).user.id,
     responses: [],
   });
@@ -39,16 +49,36 @@ export const getTask = async (req: Request, res: Response) => {
 
 //Eliminar una tarea:
 export const deleteTask = async (req: Request, res: Response) => {
-  const task = await TaskWriteModel.findByIdAndDelete(req.params.id);
+  const { taskId, groupId } = req.params;
+
+  // Verificar si el usuario es el administrador del grupo
+  const user = (req as any).user;
+  const isAdmin = await GroupModel.exists({ _id: groupId, adminId: user.id });
+
+  if (!isAdmin) {
+    return res.status(403).json({ error: "No eres el administrador de este grupo" });
+  }
+
+  const task = await TaskWriteModel.findByIdAndDelete(taskId);
   if (!task) return res.status(404).json("No se encontró la tarea");
   res.json(task);
 };
 
 //Actualizar una tarea:
 export const updateTask = async (req: Request, res: Response) => {
-  const task = await TaskWriteModel.findByIdAndUpdate(req.params.id, req.body, {
+  const { taskId, groupId } = req.params;
+
+  // Verificar si el usuario es el administrador del grupo
+  const user = (req as any).user;
+  const isAdmin = await GroupModel.exists({ _id: groupId, adminId: user.id });
+
+  if (!isAdmin) {
+    return res.status(403).json({ error: "No eres el administrador de este grupo" });
+  }
+
+  const task = await TaskWriteModel.findByIdAndUpdate(taskId, req.body, {
     new: true,
   });
   if (!task) return res.status(404).json("No se encontró la tarea");
-  res.json(task);
+  res.json(task._id);
 };

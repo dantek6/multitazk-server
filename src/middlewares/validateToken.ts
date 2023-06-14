@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import env from "dotenv";
+import { USER } from "../models/Users";
 import { Request, Response, NextFunction } from "express";
 
 export const authRequired = (
@@ -11,6 +12,8 @@ export const authRequired = (
   env.config();
   const tokenSecret = process.env.TOKEN_SECRET;
 
+  // const userId: USER | undefined = (req as any).user.id;
+
   if (!token) {
     return res.status(401).json({ error: "No hay token" });
   }
@@ -18,7 +21,7 @@ export const authRequired = (
   jwt.verify(token, tokenSecret!, (err: jwt.VerifyErrors | null, user: any) => {
     if (err) return res.status(403).json({ error: "Token no válido" });
 
-    (req as any).user = user;
+    (req as any).user = user as USER;
     next();
   });
 };

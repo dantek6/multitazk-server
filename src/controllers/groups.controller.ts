@@ -15,7 +15,6 @@ export const createGroups = async (req: Request, res: Response) => {
   const { name } = req.body;
 
   try {
-    console.log((req as any).user);
 
     const newGroup = new Groupmodel({
       name,
@@ -25,7 +24,8 @@ export const createGroups = async (req: Request, res: Response) => {
     });
 
     const groupSaved = await newGroup.save();
-    const groupToken = await createAccessToken({ id: groupSaved._id });
+    res.json(groupSaved);
+    // const groupToken = await createAccessToken({ id: groupSaved._id });
   } catch (error) {
     res.status(500).json({ error: "Error al crear grupo" });
   }
@@ -43,5 +43,5 @@ export const getGroup = async (req: Request, res: Response) => {
 export const deleteGroup = async (req: Request, res: Response) => {
   const group = await Groupmodel.findByIdAndDelete(req.params.id);
   if (!group) return res.status(404).json("No se encontró el grupo");
-  res.json(group);
+  return res.sendStatus(204);
 };
