@@ -8,6 +8,11 @@ import moment from "moment-timezone";
 export const register = async (req: Request, res: Response) => {
   const { username, email, password } = req.body;
   try {
+    const userFound = await UserModel.findOne({ email: email });
+    if (userFound){
+      return res.status(400).json({ message: "El correo ya está registrado" });
+    }
+
     const passwordHash = await bcrypt.hash(password, 10);
 
     const newUser = new UserModel({

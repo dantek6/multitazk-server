@@ -15,10 +15,10 @@ const app = express();
 
 env.config();
 
+app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
 
 //Crear Rutas Usuarios:
 app.use('/api', authRoutes);
