@@ -8,20 +8,24 @@ export const authRequired = (
   res: Response,
   next: NextFunction
 ) => {
-  const { token } = req.cookies;
-  env.config();
-  const tokenSecret = process.env.TOKEN_SECRET;
-
-  // const userId: USER | undefined = (req as any).user.id;
-
-  if (!token) {
-    return res.status(401).json({ error: "No hay token" });
+  try{
+    const { token } = req.cookies;
+    env.config();
+    const tokenSecret = process.env.TOKEN_SECRET;
+  
+    // const userId: USER | undefined = (req as any).user.id;
+  
+    if (!token) {
+      return res.status(401).json({ error: "No hay token" });
+    }
+  
+    jwt.verify(token, tokenSecret!, (err: jwt.VerifyErrors | null, user: any) => {
+      if (err) return res.status(401).json({ error: "Token no válido" });
+  
+      (req as any).user = user as USER;
+      next();
+    });
+  }catch(error){
+    res.status(500).json({ error: "Error al verificar el token" });
   }
-
-  jwt.verify(token, tokenSecret!, (err: jwt.VerifyErrors | null, user: any) => {
-    if (err) return res.status(403).json({ error: "Token no válido" });
-
-    (req as any).user = user as USER;
-    next();
-  });
 };

@@ -1,5 +1,5 @@
-import { prop, Passthrough, getModelForClass } from '@typegoose/typegoose';
 import { Types } from 'mongoose';
+import { prop, Passthrough, getModelForClass } from "@typegoose/typegoose";
 import { TimeStamps } from "@typegoose/typegoose/lib/defaultClasses";
 
 const objectId = Types.ObjectId;
