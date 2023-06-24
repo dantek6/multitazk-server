@@ -51,14 +51,14 @@ export const login = async (req: Request, res: Response) => {
 
     if (!userFound)
       return res.status(400).json({ 
-        error: ["Usuario no encontrado"], 
+        message: ["Usuario no encontrado"], 
       });
 
     const isMatch = await bcrypt.compare(password, userFound.password);
 
     if (!isMatch){
       return res.status(400).json({ 
-        error: ["Contraseña incorrecta"], 
+        message: ["Contraseña incorrecta"], 
     });
     }
 
@@ -78,23 +78,15 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
-//Cierre de sesión:
-export const logout = (req: Request, res: Response) => {
-  res.cookie("token", "", {
-    expires: new Date(0),
-  });
-  return res.sendStatus(200);
-};
-
 //Verificación de Token:
 export const verifyToken = async (req: Request, res: Response) => {
 
   const { token } = req.cookies;
 
-  if (!token) return res.status(401).json({ error: "No hay token" });
+  if (!token) return res.send(false);
 
   jwt.verify(token, process.env.TOKEN_SECRET!, async (err: jwt.VerifyErrors | null, user: any) => {
-    if (err) return res.status(403).json({ error: "Token no válido" });
+    // if (err) return res.status(403).json({ error: "Token no válido" });
 
     if (err) return res.status(401).json({ error: "Token no válido" });
 
@@ -111,6 +103,16 @@ export const verifyToken = async (req: Request, res: Response) => {
     });
 
   });
+};
+
+//Cierre de sesión:
+export const logout = (req: Request, res: Response) => {
+  res.cookie("token", "", {
+    httpOnly: true,
+    secure: true,
+    expires: new Date(0),
+  });
+  return res.sendStatus(200);
 };
 
 //Ver Perfil de Usuario:

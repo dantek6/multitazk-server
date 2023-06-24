@@ -24,7 +24,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 //Crear Rutas Usuarios:
-app.use('/api', authRoutes);
+app.use('/api/auth', authRoutes);
 
 //Crear Rutas Grupos:
 app.use('/api', groupsRoutes);
