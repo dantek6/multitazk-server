@@ -8,9 +8,11 @@ export const authRequired = (
   res: Response,
   next: NextFunction
 ) => {
+  console.log("Middleware authRequired: antes del try");
   try{
     const { token } = req.cookies;
     env.config();
+    console.log("Token:", token);
     const tokenSecret = process.env.TOKEN_SECRET;
   
     // const userId: USER | undefined = (req as any).user.id;
@@ -20,6 +22,7 @@ export const authRequired = (
     }
   
     jwt.verify(token, tokenSecret!, (err: jwt.VerifyErrors | null, user: any) => {
+      console.log(tokenSecret)
       if (err) return res.status(401).json({ error: "Token no válido" });
   
       (req as any).user = user as USER;
