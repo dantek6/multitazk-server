@@ -5,8 +5,6 @@ import { Types } from 'mongoose';
 const objectId = Types.ObjectId;
 
 class GROUP extends TimeStamps{
-    // @prop({ required: true, unique: true, trim: true })
-    // id: string
 
     @prop({ required: true })
     name: string
@@ -20,8 +18,6 @@ class GROUP extends TimeStamps{
     @prop({ type: objectId, ref: 'UserModel',required: true })
     adminId: Types.ObjectId
 
-    // @prop({ required: true })
-    // achievements: string[]
 }
 
 const GroupModel = getModelForClass(GROUP);

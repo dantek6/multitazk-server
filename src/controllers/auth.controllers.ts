@@ -50,8 +50,7 @@ export const login = async (req: Request, res: Response) => {
       email,
     });
 
-    if (!userFound)
-      return res.status(400).json(["Usuario no encontrado"]);
+    if (!userFound) return res.status(400).json(["Usuario no encontrado"]);
 
     const isMatch = await bcrypt.compare(password, userFound.password);
 

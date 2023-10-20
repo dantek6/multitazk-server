@@ -15,9 +15,6 @@ class TaskWrite extends TimeStamps{
     @prop({ required: true })
     date: Date
 
-    // @prop()
-    // timeMin: number
-
     @prop({ type: objectId, ref: 'GroupModel',required: true })
     groupId: Types.ObjectId;
     
