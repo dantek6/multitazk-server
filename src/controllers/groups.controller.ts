@@ -57,7 +57,7 @@ export const deleteGroup = async (req: Request, res: Response) => {
 export const updateGroup = async (req: Request, res: Response) => {
   try {
     const groupId = req.params.id;
-    const { name } = req.body;
+    const { name, userId } = req.body;
 
     // Verifica si el grupo existe
     const group = await Groupmodel.findById(groupId);
@@ -69,6 +69,10 @@ export const updateGroup = async (req: Request, res: Response) => {
     // Actualiza el nombre del grupo si se proporciona en la solicitud
     if (name) {
       group.name = name;
+    }
+
+    if(userId){
+      group.usersId.push(userId);
     }
 
     // Guarda los cambios en el grupo
